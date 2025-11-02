@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cookie测试页面</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #4361ee;
+            text-align: center;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            background: #4361ee;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #304fd1;
+        }
+        .result {
+            margin-top: 10px;
+            padding: 10px;
+            background: #e9ecef;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Cookie测试页面</h1>
+        
+        <div class="test-section">
+            <h2>主题设置测试</h2>
+            <button onclick="setTheme('light')">设置浅色主题</button>
+            <button onclick="setTheme('dark')">设置深色主题</button>
+            <button onclick="getTheme()">读取当前主题</button>
+            <div class="result" id="themeResult">点击按钮测试主题设置</div>
+        </div>
+        
+        <div class="test-section">
+        </div>
+        
+        <div class="test-section">
+            <h2>Cookie信息</h2>
+            <button onclick="showAllCookies()">显示所有Cookie</button>
+            <button onclick="clearTestCookies()">清除测试Cookie</button>
+            <div class="result" id="cookieResult">点击按钮查看Cookie信息</div>
+        </div>
+    </div>
+
+    <script>
+        // Cookie 操作函数
+        function setCookie(name, value, days) {
+            try {
+                // 优先使用localStorage存储
+                localStorage.setItem(name, value);
+                
+                // 同时设置Cookie作为备份
+                const d = new Date();
+                d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
+                const expires = "expires=" + d.toUTCString();
+                // 添加更完整的Cookie属性以确保跨页面访问
+                document.cookie = name + "=" + value + ";" + expires + ";path=/;SameSite=Lax";
+                
+                console.log('设置Cookie:', name, '=', value);
+            } catch (error) {
+                console.log('存储功能不可用，使用默认设置');
+            }
+        }
+        
+        function getCookie(name) {
+            try {
+                // 优先从 localStorage 读取
+                const localValue = localStorage.getItem(name);
+                if (localValue !== null) {
+                    console.log('从localStorage读取:', name, '=', localValue);
+                    return localValue;
+                }
+                
+                // 如果 localStorage 中没有，尝试从 Cookie 读取
+                const cookieName = name + "=";
+                const decodedCookie = decodeURIComponent(document.cookie);
+                const cookieArray = decodedCookie.split(';');
+                
+                for (let i = 0; i < cookieArray.length; i++) {
+                    let cookie = cookieArray[i];
+                    while (cookie.charAt(0) === ' ') {
+                        cookie = cookie.substring(1);
+                    }
+                    if (cookie.indexOf(cookieName) === 0) {
+                        const value = cookie.substring(cookieName.length, cookie.length);
+                        // 同步到 localStorage
+                        try {
+                            localStorage.setItem(name, value);
+                        } catch (e) {}
+                        console.log('从Cookie读取:', name, '=', value);
+                        return value;
+                    }
+                }
+            } catch (error) {
+                console.log('读取存储数据失败');
+            }
+            console.log('未找到Cookie:', name);
+            return "";
+        }
+        
+        // 主题设置测试函数
+        function setTheme(theme) {
+            setCookie('theme', theme, 30);
+            document.getElementById('themeResult').textContent = '已设置主题为: ' + theme;
+        }
+        
+        function getTheme() {
+            const theme = getCookie('theme');
+            document.getElementById('themeResult').textContent = '当前主题: ' + (theme || '未设置');
+        }
+        
+        // Cookie信息测试函数
+        function showAllCookies() {
+            const cookies = document.cookie;
+            document.getElementById('cookieResult').textContent = '当前所有Cookie: ' + cookies;
+        }
+        
+        function clearTestCookies() {
+            // 清除测试用的Cookie
+            document.cookie = "theme=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            localStorage.removeItem('theme');
+            document.getElementById('cookieResult').textContent = '已清除测试Cookie';
+        }
+        
+        // 页面加载时显示当前Cookie
+        window.addEventListener('load', function() {
+            showAllCookies();
+        });
+    </script>
+</body>
+</html>

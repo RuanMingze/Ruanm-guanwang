@@ -1,0 +1,35 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- 圆形边框背景 -->
+  <circle cx="100" cy="100" r="100" fill="url(#gradient)" />
+  
+  <!-- 渐变定义 -->
+  <defs>
+    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4361ee" />
+      <stop offset="100%" stop-color="#3a0ca3" />
+    </linearGradient>
+    <linearGradient id="toolGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4cc9f0" />
+      <stop offset="100%" stop-color="#f72585" />
+    </linearGradient>
+  </defs>
+  
+  <!-- 工具箱图标 -->
+  <g transform="translate(100, 110)">
+    <!-- 工具箱主体 -->
+    <rect x="-40" y="-30" width="80" height="60" rx="5" fill="url(#toolGradient)" />
+    
+    <!-- 工具箱盖子 -->
+    <rect x="-45" y="-40" width="90" height="15" rx="3" fill="url(#toolGradient)" opacity="0.9" />
+    
+    <!-- 工具箱锁 -->
+    <rect x="-5" y="-35" width="10" height="8" rx="2" fill="white" />
+    
+    <!-- 工具图标（扳手） -->
+    <path d="M-20 -5 L-25 10 L-20 15 L-10 5 L-15 0 Z" fill="white" opacity="0.9" />
+    
+    <!-- 工具图标（螺丝刀） -->
+    <rect x="10" y="-5" width="3" height="20" fill="white" opacity="0.8" />
+    <circle cx="11.5" cy="-8" r="4" fill="white" opacity="0.8" />
+  </g>
+</svg>

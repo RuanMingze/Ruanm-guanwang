@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>关于我们 - Ruanm</title>
+    <meta name="description" content="了解Ruanm公司，我们的使命、愿景和核心价值观">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3a0ca3;
+            --accent-color: #4cc9f0;
+            --light-bg: #f8f9fa;
+            --dark-bg: #121212;
+            --card-bg: #ffffff;
+            --text-dark: #2b2d42;
+            --text-light: #f8f9fa;
+            --shadow: 0 4px 20px rgba(0,0,0,0.1);
+            --radius: 16px;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        body.dark-mode {
+            background-color: var(--dark-bg);
+            color: var(--text-light);
+        }
+
+        body.dark-mode .card {
+            background: #1e1e1e;
+            color: var(--text-light);
+        }
+
+        body.dark-mode header {
+            background: #1a1a1a;
+            border-bottom: 1px solid #333;
+        }
+
+        body.dark-mode footer {
+            background: #1a1a1a;
+            border-top: 1px solid #333;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background: var(--card-bg);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        body.dark-mode .nav-links a {
+            color: var(--text-light);
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--text-dark);
+            transition: color 0.3s;
+        }
+
+        body.dark-mode .theme-toggle {
+            color: var(--text-light);
+        }
+
+        .theme-toggle:hover {
+            color: var(--primary-color);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 80px 0;
+            text-align: center;
+            background: linear-gradient(135deg, #f0f4f8, #e6e9f0);
+            border-radius: 0 0 var(--radius) var(--radius);
+            margin-bottom: 60px;
+        }
+
+        body.dark-mode .hero {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            color: #555;
+        }
+
+        body.dark-mode .hero p {
+            color: #aaa;
+        }
+
+        /* About Section */
+        .about-section {
+            padding: 60px 0;
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin: 60px 0;
+        }
+
+        body.dark-mode .about-section {
+            background: #1e1e1e;
+        }
+
+        .about-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .about-content h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--primary-color);
+        }
+
+        .about-content h3 {
+            margin: 25px 0 15px;
+            color: var(--primary-color);
+        }
+
+        .about-content p {
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+
+        /* Team Section */
+        .team-section {
+            padding: 60px 0;
+            text-align: center;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        .team-member {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s;
+        }
+
+        body.dark-mode .team-member {
+            background: #1e1e1e;
+        }
+
+        .team-member:hover {
+            transform: translateY(-10px);
+        }
+
+        .member-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 40px;
+        }
+
+        .member-name {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+
+        .member-role {
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        body.dark-mode .member-role {
+            color: #aaa;
+        }
+
+        .member-bio {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        body.dark-mode .member-bio {
+            color: #bbb;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--card-bg);
+            padding: 40px 0;
+            margin-top: 60px;
+            border-top: 1px solid #eee;
+        }
+
+        body.dark-mode footer {
+            border-top: 1px solid #333;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .footer-logo .logo-icon {
+            width: 40px;
+            height: 40px;
+            font-size: 18px;
+        }
+
+        .footer-logo .logo-text {
+            font-size: 20px;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .footer-links a {
+            color: #666;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        body.dark-mode .footer-links a {
+            color: #aaa;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .copyright {
+            text-align: center;
+            color: #888;
+            font-size: 0.9rem;
+            margin-top: 20px;
+        }
+
+        body.dark-mode .copyright {
+            color: #aaa;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <img src="logo.png" alt="Ruanm Logo" style="width: 100%; height: 100%; object-fit: contain;">
+                    </div>
+                    <div class="logo-text">Ruanm</div>
+                </div>
+                <div class="nav-links">
+                    <a href="home.html">首页</a>
+                    <a href="home.html#products">产品</a>
+                    <a href="home.html#features">特性</a>
+                    <a href="about.html">关于</a>
+                    <a href="privacy.html">隐私政策</a>
+                    <a href="terms.html">使用条款</a>
+                </div>
+                <button class="theme-toggle" id="themeToggle" aria-label="切换主题">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>关于我们</h1>
+            <p>了解Ruanm公司的使命、愿景和核心价值观</p>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about-section">
+        <div class="container">
+            <div class="about-content">
+                <h2>我们的故事</h2>
+                <p>Ruanm是一家专注于创造卓越数字体验的科技公司。我们致力于开发高效、易用的工具和产品，让科技更好地服务于人们的日常生活和工作。</p>
+                
+                <h3>我们的使命</h3>
+                <p>通过创新的技术解决方案，提升用户的工作效率和生活质量，让复杂的技术变得简单易用。</p>
+                
+                <h3>我们的愿景</h3>
+                <p>成为用户信赖的科技伙伴，通过持续的技术创新和优质的产品服务，推动数字化生活的发展。</p>
+                
+                <h3>核心价值观</h3>
+                <p><strong>用户至上：</strong>始终以用户需求为导向，打造贴心易用的产品体验。</p>
+                <p><strong>创新驱动：</strong>不断探索新技术，推动产品和服务的持续改进。</p>
+                <p><strong>品质保证：</strong>严格的质量控制，确保每一款产品都达到最高标准。</p>
+                <p><strong>诚信经营：</strong>坚持诚实守信的原则，与用户建立长期信任关系。</p>
+                
+                <h3>发展历程</h3>
+                <p>自成立以来，我们始终专注于技术创新和用户体验优化。通过不断的努力和积累，我们的产品已经服务了数以万计的用户，获得了广泛的认可和好评。</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section class="team-section">
+        <div class="container">
+            <h2>核心团队</h2>
+            <p>我们拥有一支充满激情和创造力的团队</p>
+            
+            <div class="team-grid">
+                <div class="team-member">
+                    <div class="member-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h3 class="member-name">阮铭泽</h3>
+                    <div class="member-role">创始人 & CEO</div>
+                    <p class="member-bio">拥有丰富的技术背景和创业经验，致力于通过技术创新改善人们的生活。</p>
+                </div>
+                
+                <div class="team-member">
+                    <div class="member-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h3 class="member-name">技术团队</h3>
+                    <div class="member-role">研发工程师</div>
+                    <p class="member-bio">由一群充满激情的技术专家组成，负责产品的研发和技术创新。</p>
+                </div>
+                
+                <div class="team-member">
+                    <div class="member-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h3 class="member-name">设计团队</h3>
+                    <div class="member-role">UI/UX设计师</div>
+                    <p class="member-bio">专注于用户体验设计，致力于打造美观、易用的产品界面。</p>
+                </div>
+                
+                <div class="team-member">
+                    <div class="member-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h3 class="member-name">运营团队</h3>
+                    <div class="member-role">产品经理</div>
+                    <p class="member-bio">负责产品规划和市场推广，确保产品满足用户需求并获得成功。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <div class="logo-icon">
+                        <img src="logo.png" alt="Ruanm Logo" style="width: 100%; height: 100%; object-fit: contain;">
+                    </div>
+                    <div class="logo-text">Ruanm</div>
+                </div>
+                <div class="footer-links">
+                    <a href="home.html">首页</a>
+                    <a href="home.html#products">产品</a>
+                    <a href="home.html#features">特性</a>
+                    <a href="about.html">关于</a>
+                    <a href="privacy.html">隐私政策</a>
+                    <a href="terms.html">使用条款</a>
+                </div>
+                <div class="copyright">
+                    &copy; 2025 Ruanm. 保留所有权利。
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Cookie 操作函数
+        function setCookie(name, value, days) {
+            try {
+                // 优先使用localStorage存储
+                localStorage.setItem(name, value);
+                
+                // 同时设置Cookie作为备份
+                const d = new Date();
+                d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
+                const expires = "expires=" + d.toUTCString();
+                // 添加更完整的Cookie属性以确保跨页面访问
+                document.cookie = name + "=" + value + ";" + expires + ";path=/;SameSite=Lax";
+            } catch (error) {
+                console.log('存储功能不可用，使用默认设置');
+            }
+        }
+        
+        function getCookie(name) {
+            try {
+                // 优先从 localStorage 读取
+                const localValue = localStorage.getItem(name);
+                if (localValue !== null) {
+                    return localValue;
+                }
+                
+                // 如果 localStorage 中没有，尝试从 Cookie 读取
+                const cookieName = name + "=";
+                const decodedCookie = decodeURIComponent(document.cookie);
+                const cookieArray = decodedCookie.split(';');
+                
+                for (let i = 0; i < cookieArray.length; i++) {
+                    let cookie = cookieArray[i];
+                    while (cookie.charAt(0) === ' ') {
+                        cookie = cookie.substring(1);
+                    }
+                    if (cookie.indexOf(cookieName) === 0) {
+                        const value = cookie.substring(cookieName.length, cookie.length);
+                        // 同步到 localStorage
+                        try {
+                            localStorage.setItem(name, value);
+                        } catch (e) {}
+                        return value;
+                    }
+                }
+            } catch (error) {
+                console.log('读取存储数据失败');
+            }
+            return "";
+        }
+        
+        // Theme toggle functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = themeToggle.querySelector('i');
+        
+        // Check for saved theme preference or respect OS preference
+        const savedTheme = getCookie('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        
+        if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+            document.body.classList.add('dark-mode');
+            themeIcon.classList.remove('fa-moon');
+            themeIcon.classList.add('fa-sun');
+        }
+        
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            
+            if (document.body.classList.contains('dark-mode')) {
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+                setCookie('theme', 'dark', 30);
+            } else {
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+                setCookie('theme', 'light', 30);
+            }
+        });
+    </script>
+</body>
+</html>

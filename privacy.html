@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>隐私政策 - Ruanm</title>
+    <meta name="description" content="Ruanm隐私政策，保护您的个人信息安全">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3a0ca3;
+            --accent-color: #4cc9f0;
+            --light-bg: #f8f9fa;
+            --dark-bg: #121212;
+            --card-bg: #ffffff;
+            --text-dark: #2b2d42;
+            --text-light: #f8f9fa;
+            --shadow: 0 4px 20px rgba(0,0,0,0.1);
+            --radius: 16px;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        body.dark-mode {
+            background-color: var(--dark-bg);
+            color: var(--text-light);
+        }
+
+        body.dark-mode .card {
+            background: #1e1e1e;
+            color: var(--text-light);
+        }
+
+        body.dark-mode header {
+            background: #1a1a1a;
+            border-bottom: 1px solid #333;
+        }
+
+        body.dark-mode footer {
+            background: #1a1a1a;
+            border-top: 1px solid #333;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background: var(--card-bg);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        body.dark-mode .nav-links a {
+            color: var(--text-light);
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--text-dark);
+            transition: color 0.3s;
+        }
+
+        body.dark-mode .theme-toggle {
+            color: var(--text-light);
+        }
+
+        .theme-toggle:hover {
+            color: var(--primary-color);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 80px 0;
+            text-align: center;
+            background: linear-gradient(135deg, #f0f4f8, #e6e9f0);
+            border-radius: 0 0 var(--radius) var(--radius);
+            margin-bottom: 60px;
+        }
+
+        body.dark-mode .hero {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            color: #555;
+        }
+
+        body.dark-mode .hero p {
+            color: #aaa;
+        }
+
+        /* Policy Section */
+        .policy-section {
+            padding: 60px 0;
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin: 60px 0;
+        }
+
+        body.dark-mode .policy-section {
+            background: #1e1e1e;
+        }
+
+        .policy-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .policy-content h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--primary-color);
+        }
+
+        .policy-content h3 {
+            margin: 25px 0 15px;
+            color: var(--primary-color);
+        }
+
+        .policy-content h4 {
+            margin: 20px 0 10px;
+            color: var(--secondary-color);
+        }
+
+        .policy-content p {
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+
+        .policy-content ul {
+            margin: 15px 0 15px 30px;
+        }
+
+        .policy-content li {
+            margin-bottom: 10px;
+            line-height: 1.8;
+        }
+
+        .update-date {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        body.dark-mode .update-date {
+            color: #aaa;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--card-bg);
+            padding: 40px 0;
+            margin-top: 60px;
+            border-top: 1px solid #eee;
+        }
+
+        body.dark-mode footer {
+            border-top: 1px solid #333;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .footer-logo .logo-icon {
+            width: 40px;
+            height: 40px;
+            font-size: 18px;
+        }
+
+        .footer-logo .logo-text {
+            font-size: 20px;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .footer-links a {
+            color: #666;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        body.dark-mode .footer-links a {
+            color: #aaa;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .copyright {
+            text-align: center;
+            color: #888;
+            font-size: 0.9rem;
+            margin-top: 20px;
+        }
+
+        body.dark-mode .copyright {
+            color: #aaa;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <img src="logo.png" alt="Ruanm Logo" style="width: 100%; height: 100%; object-fit: contain;">
+                    </div>
+                    <div class="logo-text">Ruanm</div>
+                </div>
+                <div class="nav-links">
+                    <a href="home.html">首页</a>
+                    <a href="home.html#products">产品</a>
+                    <a href="home.html#features">特性</a>
+                    <a href="about.html">关于</a>
+                    <a href="privacy.html">隐私政策</a>
+                    <a href="terms.html">使用条款</a>
+                </div>
+                <button class="theme-toggle" id="themeToggle" aria-label="切换主题">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>隐私政策</h1>
+            <p>我们如何收集、使用和保护您的个人信息</p>
+        </div>
+    </section>
+
+    <!-- Policy Section -->
+    <section class="policy-section">
+        <div class="container">
+            <div class="policy-content">
+                <div class="update-date">最后更新时间：2025年10月31日</div>
+                
+                <p>我们尊重并保护所有使用服务用户的个人隐私权。为了给您提供更准确、更有个性化的服务，我们将按照本隐私权政策的规定使用和披露您的个人信息。但我们将以高度的勤勉、审慎义务对待这些信息。除本隐私权政策另有规定外，在未征得您事先许可的情况下，我们不会将这些信息对外披露或向第三方提供。</p>
+                
+                <h3>信息收集</h3>
+                <p>我们不主动收集用户的个人信息，仅在用户主动提供时才会保存相关信息。我们可能收集的信息包括但不限于：</p>
+                <ul>
+                    <li>您在使用我们服务时主动提供的信息</li>
+                    <li>您在注册账户时提供的信息</li>
+                    <li>您在使用产品过程中产生的使用数据</li>
+                </ul>
+                
+                <h3>信息使用</h3>
+                <p>我们收集的信息将用于：</p>
+                <ul>
+                    <li>提供、维护和改善我们的产品和服务</li>
+                    <li>开发新的产品和服务</li>
+                    <li>保护用户安全和合法权益</li>
+                    <li>与您进行沟通和联系</li>
+                    <li>进行数据分析和市场研究</li>
+                </ul>
+                
+                <h3>信息披露</h3>
+                <p>未经您同意，我们不会与任何无关第三方分享您的个人信息。但在以下情况下，我们可能会披露您的信息：</p>
+                <ul>
+                    <li>根据法律法规的要求</li>
+                    <li>为保护我们或其他用户的权利、财产或安全</li>
+                    <li>在涉及合并、收购或资产出售时，转移相关信息</li>
+                </ul>
+                
+                <h3>信息安全</h3>
+                <p>我们采取各种预防措施保护您的信息安全，防止信息丢失、误用、未经授权的访问、披露、修改或破坏：</p>
+                <ul>
+                    <li>使用加密技术保护数据传输安全</li>
+                    <li>定期进行安全审计和漏洞扫描</li>
+                    <li>限制员工对用户信息的访问权限</li>
+                    <li>建立完善的安全管理制度</li>
+                </ul>
+                
+                <h3>您的权利</h3>
+                <p>您有权：</p>
+                <ul>
+                    <li>访问、更正或删除您的个人信息</li>
+                    <li>拒绝或限制我们处理您的个人信息</li>
+                    <li>获取您个人信息的副本</li>
+                    <li>撤回您对个人信息处理的同意</li>
+                </ul>
+                
+                <h3>Cookie和类似技术</h3>
+                <p>我们可能会使用Cookie和类似技术来改善用户体验：</p>
+                <ul>
+                    <li>记住您的偏好设置</li>
+                    <li>分析网站使用情况</li>
+                    <li>提供个性化内容</li>
+                </ul>
+                <p>您可以通过浏览器设置管理Cookie的使用。</p>
+                
+                <h3>第三方服务</h3>
+                <p>我们可能会使用第三方服务提供商来帮助我们运营和改善服务：</p>
+                <ul>
+                    <li>云存储服务</li>
+                    <li>数据分析服务</li>
+                    <li>支付处理服务</li>
+                </ul>
+                <p>这些第三方服务提供商仅在必要范围内访问您的信息，并承担保密义务。</p>
+                
+                <h3>儿童隐私</h3>
+                <p>我们的服务面向所有年龄段的用户，包括儿童。我们重视所有用户的隐私保护，特别是对儿童个人信息的保护。如果您是家长或监护人，您可以监督您的孩子使用我们的服务。</p>
+                
+                <h3>国际数据传输</h3>
+                <p>如果您在其他国家或地区使用我们的服务，您的信息可能会被传输到我们运营所在的国家/地区。我们将采取适当措施确保信息传输的安全性。</p>
+                
+                <h3>政策变更</h3>
+                <p>我们可能会不时更新本隐私政策。如有重大变更，我们将在产品中通过明显方式通知您。我们建议您定期查看本政策以了解最新信息。</p>
+                
+                <h3>联系我们</h3>
+                <p>如果您对本隐私政策有任何疑问或需要行使您的权利，请通过以下方式联系我们：</p>
+                <p>邮箱：xmt20160124@outlook.com</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <div class="logo-icon">
+                        <img src="logo.png" alt="Ruanm Logo" style="width: 100%; height: 100%; object-fit: contain;">
+                    </div>
+                    <div class="logo-text">Ruanm</div>
+                </div>
+                <div class="footer-links">
+                    <a href="home.html">首页</a>
+                    <a href="home.html#products">产品</a>
+                    <a href="home.html#features">特性</a>
+                    <a href="about.html">关于</a>
+                    <a href="privacy.html">隐私政策</a>
+                    <a href="terms.html">使用条款</a>
+                </div>
+                <div class="copyright">
+                    &copy; 2025 Ruanm. 保留所有权利。
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Cookie 操作函数
+        function setCookie(name, value, days) {
+            try {
+                // 优先使用localStorage存储
+                localStorage.setItem(name, value);
+                
+                // 同时设置Cookie作为备份
+                const d = new Date();
+                d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
+                const expires = "expires=" + d.toUTCString();
+                // 添加更完整的Cookie属性以确保跨页面访问
+                document.cookie = name + "=" + value + ";" + expires + ";path=/;SameSite=Lax";
+            } catch (error) {
+                console.log('存储功能不可用，使用默认设置');
+            }
+        }
+        
+        function getCookie(name) {
+            try {
+                // 优先从 localStorage 读取
+                const localValue = localStorage.getItem(name);
+                if (localValue !== null) {
+                    return localValue;
+                }
+                
+                // 如果 localStorage 中没有，尝试从 Cookie 读取
+                const cookieName = name + "=";
+                const decodedCookie = decodeURIComponent(document.cookie);
+                const cookieArray = decodedCookie.split(';');
+                
+                for (let i = 0; i < cookieArray.length; i++) {
+                    let cookie = cookieArray[i];
+                    while (cookie.charAt(0) === ' ') {
+                        cookie = cookie.substring(1);
+                    }
+                    if (cookie.indexOf(cookieName) === 0) {
+                        const value = cookie.substring(cookieName.length, cookie.length);
+                        // 同步到 localStorage
+                        try {
+                            localStorage.setItem(name, value);
+                        } catch (e) {}
+                        return value;
+                    }
+                }
+            } catch (error) {
+                console.log('读取存储数据失败');
+            }
+            return "";
+        }
+        
+        // Theme toggle functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = themeToggle.querySelector('i');
+        
+        // Check for saved theme preference or respect OS preference
+        const savedTheme = getCookie('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        
+        if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+            document.body.classList.add('dark-mode');
+            themeIcon.classList.remove('fa-moon');
+            themeIcon.classList.add('fa-sun');
+        }
+        
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            
+            if (document.body.classList.contains('dark-mode')) {
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+                setCookie('theme', 'dark', 30);
+            } else {
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+                setCookie('theme', 'light', 30);
+            }
+        });
+    </script>
+</body>
+</html>

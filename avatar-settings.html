@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>头像设置 - Ruanm</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3a0ca3;
+            --accent-color: #4cc9f0;
+            --success-color: #51cf66;
+            --warning-color: #fcc419;
+            --danger-color: #ff6b6b;
+            --text-dark: #343a40;
+            --text-light: #f8f9fa;
+            --bg-light: #ffffff;
+            --bg-dark: #121212;
+            --card-bg: #ffffff;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --radius: 10px;
+        }
+
+        body.dark-mode {
+            --text-dark: #f8f9fa;
+            --text-light: #343a40;
+            --bg-light: #121212;
+            --bg-dark: #ffffff;
+            --card-bg: #1e1e1e;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, var(--bg-light), #e9ecef);
+            color: var(--text-dark);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        body.dark-mode {
+            background: linear-gradient(135deg, var(--bg-dark), #1a1a2e);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            color: var(--primary-color);
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .back-link i {
+            margin-right: 8px;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .settings-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .settings-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+
+        .settings-header p {
+            font-size: 1.1rem;
+            color: #666;
+        }
+
+        body.dark-mode .settings-header p {
+            color: #aaa;
+        }
+
+        .settings-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+
+        body.dark-mode .settings-card {
+            background: #1e1e1e;
+        }
+
+        .current-avatar {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .avatar-preview {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 20px;
+            border: 3px solid var(--primary-color);
+            display: block;
+        }
+
+        .upload-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .upload-label {
+            display: block;
+            margin-bottom: 15px;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .file-input-wrapper input[type="file"] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .file-input-button {
+            display: inline-block;
+            padding: 12px 24px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .file-input-button:hover {
+            background: #304fd1;
+            transform: translateY(-2px);
+        }
+
+        .file-name {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        body.dark-mode .file-name {
+            color: #aaa;
+        }
+
+        .preview-section {
+            text-align: center;
+            margin-bottom: 30px;
+            display: none;
+        }
+
+        .preview-section h3 {
+            margin-bottom: 15px;
+        }
+
+        .preview-image {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: var(--radius);
+            margin: 0 auto;
+            display: block;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #304fd1;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #41b353;
+            transform: translateY(-2px);
+        }
+
+        .notification {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+            display: none;
+        }
+
+        .notification.success {
+            background: rgba(81, 207, 102, 0.2);
+            color: var(--success-color);
+            border: 1px solid var(--success-color);
+        }
+
+        .notification.error {
+            background: rgba(255, 107, 107, 0.2);
+            color: var(--danger-color);
+            border: 1px solid var(--danger-color);
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .settings-card {
+                padding: 20px;
+            }
+
+            .settings-header h1 {
+                font-size: 2rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 引入配置文件 -->
+    <script src="config.js"></script>
+    
+    <div class="container">
+        <a href="home.html" class="back-link">
+            <i class="fas fa-arrow-left"></i>
+            <span>返回首页</span>
+        </a>
+        
+        <div class="settings-header">
+            <h1>头像设置</h1>
+            <p>上传并设置您的个人头像</p>
+        </div>
+        
+        <div class="settings-card">
+            <div class="notification" id="notification"></div>
+            
+            <div class="current-avatar">
+                <h3>当前头像</h3>
+                <img src="https://ui-avatars.com/api/?name=U&background=4361ee&color=fff&size=120" alt="当前头像" class="avatar-preview" id="currentAvatar">
+            </div>
+            
+            <div class="upload-section">
+                <label class="upload-label">选择新头像</label>
+                <div class="file-input-wrapper">
+                    <div class="file-input-button">
+                        <i class="fas fa-upload"></i>
+                        选择图片
+                    </div>
+                    <input type="file" id="avatarInput" accept="image/*" aria-label="选择头像图片">
+                </div>
+                <div class="file-name" id="fileName">未选择文件</div>
+            </div>
+            
+            <div class="preview-section" id="previewSection">
+                <h3>预览</h3>
+                <img src="" alt="预览图片" class="preview-image" id="previewImage">
+            </div>
+            
+            <div class="action-buttons">
+                <button class="btn btn-primary" id="saveBtn">
+                    <i class="fas fa-save"></i>
+                    保存头像
+                </button>
+                <button class="btn btn-secondary" id="cancelBtn">
+                    <i class="fas fa-times"></i>
+                    取消
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Cookie 操作函数
+        function setCookie(name, value, days) {
+            try {
+                // 优先使用localStorage存储
+                localStorage.setItem(name, value);
+                
+                // 同时设置Cookie作为备份
+                const d = new Date();
+                d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
+                const expires = "expires=" + d.toUTCString();
+                // 添加更完整的Cookie属性以确保跨页面访问
+                document.cookie = name + "=" + value + ";" + expires + ";path=/;SameSite=Lax";
+            } catch (error) {
+                console.log('存储功能不可用，使用默认设置');
+            }
+        }
+        
+        function getCookie(name) {
+            try {
+                // 优先从 localStorage 读取
+                const localValue = localStorage.getItem(name);
+                if (localValue !== null) {
+                    return localValue;
+                }
+                
+                // 如果 localStorage 中没有，尝试从 Cookie 读取
+                const cookieName = name + "=";
+                const decodedCookie = decodeURIComponent(document.cookie);
+                const cookieArray = decodedCookie.split(';');
+                
+                for (let i = 0; i < cookieArray.length; i++) {
+                    let cookie = cookieArray[i];
+                    while (cookie.charAt(0) === ' ') {
+                        cookie = cookie.substring(1);
+                    }
+                    if (cookie.indexOf(cookieName) === 0) {
+                        const value = cookie.substring(cookieName.length, cookie.length);
+                        // 同步到 localStorage
+                        try {
+                            localStorage.setItem(name, value);
+                        } catch (e) {}
+                        return value;
+                    }
+                }
+            } catch (error) {
+                console.log('读取存储数据失败');
+            }
+            return "";
+        }
+        
+        // 页面加载时检查用户登录状态
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentUser = getCookie('currentUser');
+            
+            if (!currentUser) {
+                alert('请先登录');
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            const user = JSON.parse(currentUser);
+            
+            // 显示当前头像
+            const currentAvatar = document.getElementById('currentAvatar');
+            if (user.avatar) {
+                currentAvatar.src = user.avatar;
+            } else if (user.avatar_url) {
+                currentAvatar.src = user.avatar_url;
+            } else {
+                currentAvatar.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name || user.username || 'U')}&background=4361ee&color=fff&size=120`;
+            }
+            
+            // 文件选择事件
+            const avatarInput = document.getElementById('avatarInput');
+            const fileName = document.getElementById('fileName');
+            const previewSection = document.getElementById('previewSection');
+            const previewImage = document.getElementById('previewImage');
+            
+            avatarInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    fileName.textContent = file.name;
+                    
+                    // 预览图片
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        previewImage.src = e.target.result;
+                        previewSection.style.display = 'block';
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    fileName.textContent = '未选择文件';
+                    previewSection.style.display = 'none';
+                }
+            });
+            
+            // 保存按钮事件
+            const saveBtn = document.getElementById('saveBtn');
+            const notification = document.getElementById('notification');
+            
+            saveBtn.addEventListener('click', function() {
+                const file = avatarInput.files[0];
+                if (!file) {
+                    showNotification('请先选择一张图片', 'error');
+                    return;
+                }
+                
+                // 检查文件大小（限制为5MB）
+                if (file.size > 5 * 1024 * 1024) {
+                    showNotification('图片大小不能超过5MB', 'error');
+                    return;
+                }
+                
+                // 检查文件类型
+                if (!file.type.startsWith('image/')) {
+                    showNotification('请选择有效的图片文件', 'error');
+                    return;
+                }
+                
+                // 读取图片并转换为base64
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const base64Image = e.target.result;
+                    
+                    // 更新用户信息
+                    user.avatar = base64Image;
+                    
+                    // 保存到localStorage和Cookie
+                    setCookie('currentUser', JSON.stringify(user), 30);
+                    
+                    // 更新当前头像显示
+                    currentAvatar.src = base64Image;
+                    
+                    // 隐藏预览
+                    previewSection.style.display = 'none';
+                    avatarInput.value = '';
+                    fileName.textContent = '未选择文件';
+                    
+                    showNotification('头像更新成功！', 'success');
+                    
+                    // 同步到后端服务器
+                    updateAvatarOnServer(base64Image);
+                };
+                reader.readAsDataURL(file);
+            });
+            
+            // 取消按钮事件
+            const cancelBtn = document.getElementById('cancelBtn');
+            cancelBtn.addEventListener('click', function() {
+                previewSection.style.display = 'none';
+                avatarInput.value = '';
+                fileName.textContent = '未选择文件';
+            });
+            
+            // 显示通知函数
+            function showNotification(message, type) {
+                notification.textContent = message;
+                notification.className = 'notification ' + type;
+                notification.style.display = 'block';
+                
+                // 3秒后自动隐藏
+                setTimeout(function() {
+                    notification.style.display = 'none';
+                }, 3000);
+            }
+            
+            // 向后端更新头像的函数（可选实现）
+            function updateAvatarOnServer(base64Image) {
+                // 获取当前用户信息
+                const currentUser = JSON.parse(getCookie('currentUser'));
+                if (!currentUser || !currentUser.id) {
+                    showNotification('用户信息不完整，无法同步到服务器', 'error');
+                    return;
+                }
+                
+                // 使用配置文件中的后端URL
+                fetch(getApiUrl('/user/' + currentUser.id + '/avatar'), {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        avatar: base64Image
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showNotification('头像已同步到服务器', 'success');
+                        
+                        // 更新本地存储的用户信息
+                        currentUser.avatar = base64Image;
+                        setCookie('currentUser', JSON.stringify(currentUser), 30);
+                    } else {
+                        showNotification('服务器同步失败: ' + data.message, 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('同步头像到服务器失败:', error);
+                    showNotification('服务器同步失败，请检查网络连接', 'error');
+                });
+            }
+        });
+    </script>
+</body>
+</html>

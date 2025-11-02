@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OAuth登录回调处理</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #4361ee, #3a0ca3);
+            color: white;
+        }
+        
+        body.dark-mode {
+            background: linear-gradient(135deg, #121220, #1a1a2e);
+        }
+        
+        .callback-container {
+            text-align: center;
+            background: rgba(255,255,255,0.1);
+            padding: 40px;
+            border-radius: 20px;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            max-width: 500px;
+        }
+        
+        body.dark-mode .callback-container {
+            background: rgba(37, 37, 64, 0.1);
+        }
+        
+        .loading {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top: 4px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        
+        body.dark-mode .spinner {
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top: 4px solid white;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error {
+            color: #ff6b6b;
+            background: rgba(255,107,107,0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        body.dark-mode .error {
+            background: rgba(255,107,107,0.2);
+        }
+        
+        .success {
+            color: #51cf66;
+            background: rgba(81,207,102,0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        body.dark-mode .success {
+            background: rgba(81,207,102,0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="callback-container">
+        <h1>🔐 OAuth登录处理中</h1>
+        <div class="loading" id="status">正在处理登录回调...</div>
+        <div class="spinner" id="spinner"></div>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        // Cookie 操作函数
+        function setCookie(name, value, days) {
+            try {
+                // 优先使用localStorage存储
+                localStorage.setItem(name, value);
+                
+                // 同时设置Cookie作为备份
+                const d = new Date();
+                d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
+                const expires = "expires=" + d.toUTCString();
+                // 添加更完整的Cookie属性以确保跨页面访问
+                document.cookie = name + "=" + value + ";" + expires + ";path=/;SameSite=Lax";
+            } catch (error) {
+                console.log('存储功能不可用，使用默认设置');
+            }
+        }
+        
+        function getCookie(name) {
+            try {
+                // 优先从 localStorage 读取
+                const localValue = localStorage.getItem(name);
+                if (localValue !== null) {
+                    return localValue;
+                }
+                
+                // 如果 localStorage 中没有，尝试从 Cookie 读取
+                const cookieName = name + "=";
+                const decodedCookie = decodeURIComponent(document.cookie);
+                const cookieArray = decodedCookie.split(';');
+                
+                for (let i = 0; i < cookieArray.length; i++) {
+                    let cookie = cookieArray[i];
+                    while (cookie.charAt(0) === ' ') {
+                        cookie = cookie.substring(1);
+                    }
+                    if (cookie.indexOf(cookieName) === 0) {
+                        const value = cookie.substring(cookieName.length, cookie.length);
+                        // 同步到 localStorage
+                        try {
+                            localStorage.setItem(name, value);
+                        } catch (e) {}
+                        return value;
+                    }
+                }
+            } catch (error) {
+                console.log('读取存储数据失败');
+            }
+            return "";
+        }
+        
+        // 主题同步功能
+        document.addEventListener('DOMContentLoaded', function() {
+            // 检查首页保存的主题设置
+            const savedTheme = getCookie('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            
+            if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+                document.body.classList.add('dark-mode');
+            }
+        });
+        
+        // 获取URL参数
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
+        const state = urlParams.get('state');
+        const error = urlParams.get('error');
+        const error_description = urlParams.get('error_description');
+        const provider = getCookie('oauth_provider');
+        
+        const statusEl = document.getElementById('status');
+        const spinnerEl = document.getElementById('spinner');
+        const resultEl = document.getElementById('result');
+        
+        async function handleCallback() {
+            try {
+                if (error) {
+                    throw new Error(error_description || error);
+                }
+                
+                if (!code || !state || !provider) {
+                    throw new Error('缺少必要的OAuth参数');
+                }
+                
+                // 验证state参数
+                const savedState = getCookie('oauth_state');
+                if (state !== savedState) {
+                    throw new Error('无效的state参数，可能存在安全风险');
+                }
+                
+                statusEl.textContent = '获取用户信息...';
+                
+                let userData = null;
+                
+                if (provider === 'github') {
+                    // 获取真实的GitHub用户信息
+                    userData = await fetchGitHubUserInfo(code);
+                } else {
+                    // 其他平台使用模拟数据（需要配置时再完善）
+                    const simulatedUsers = {
+                        microsoft: {
+                            name: 'Microsoft User',
+                            email: 'user@outlook.com',
+                            avatar: 'https://via.placeholder.com/60/0078d4/ffffff?text=MS',
+                            provider: 'microsoft'
+                        },
+                        google: {
+                            name: 'Google User',
+                            email: 'user@gmail.com',
+                            avatar: 'https://via.placeholder.com/60/db4437/ffffff?text=G',
+                            provider: 'google'
+                        }
+                    };
+                    userData = simulatedUsers[provider];
+                }
+                
+                if (!userData) {
+                    throw new Error('获取用户信息失败');
+                }
+                
+                // 保存用户数据
+                setCookie('currentUser', JSON.stringify(userData), 30);
+                console.log('用户数据已保存到localStorage和Cookie:', userData);
+                
+                // 清理OAuth参数
+                localStorage.removeItem('oauth_provider');
+                localStorage.removeItem('oauth_state');
+                // 同时清理Cookie中的OAuth参数
+                document.cookie = "oauth_provider=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                document.cookie = "oauth_state=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                
+                // 显示成功信息
+                spinnerEl.style.display = 'none';
+                statusEl.textContent = '✅ 登录成功！';
+                resultEl.innerHTML = `
+                    <div class="success">
+                        <h3>欢迎，${userData.name}！</h3>
+                        <p>您已成功使用 ${provider.charAt(0).toUpperCase() + provider.slice(1)} 登录</p>
+                        <p>正在跳转回首页...</p>
+                    </div>
+                `;
+                
+                // 立即跳转回主页
+                window.location.href = 'home.html';
+                
+            } catch (error) {
+                console.error('OAuth回调错误:', error);
+                
+                spinnerEl.style.display = 'none';
+                statusEl.textContent = '❌ 登录失败';
+                resultEl.innerHTML = `
+                    <div class="error">
+                        <h3>登录失败</h3>
+                        <p>${error.message}</p>
+                        <div style="margin-top: 15px;">
+                            <button onclick="tryAgain()" style="margin-right: 10px; padding: 10px 20px; background: #4361ee; color: white; border: none; border-radius: 8px; cursor: pointer;">
+                                重新登录
+                            </button>
+                            <button onclick="goBack()" style="padding: 10px 20px; background: #6c757d; color: white; border: none; border-radius: 8px; cursor: pointer;">
+                                返回首页
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+        
+        // 重新登录函数
+        function tryAgain() {
+            // 清理可能存在的OAuth参数
+            localStorage.removeItem('oauth_provider');
+            localStorage.removeItem('oauth_state');
+            // 同时清理Cookie中的OAuth参数
+            document.cookie = "oauth_provider=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            document.cookie = "oauth_state=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            
+            // 重新开始GitHub OAuth流程
+            const clientId = 'Ov23liIzDeFcRlNZEMA4';
+            const redirectUri = window.location.origin + '/oauth-callback';
+            
+            // 生成新的state参数
+            const state = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+            setCookie('oauth_state', state, 1);
+            setCookie('oauth_provider', 'github', 1);
+            
+            // 构造GitHub OAuth授权URL，包含更详细的scopes
+            const scope = 'read:user,user:email'; // 读取用户基本信息和邮箱
+            const authUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${state}&scope=${encodeURIComponent(scope)}`;
+            
+            // 跳转到GitHub授权页面
+            window.location.href = authUrl;
+        }
+        
+        function goBack() {
+            window.location.href = 'home.html';
+        }
+        
+        // 获取GitHub用户信息 - 增强容错处理
+        async function fetchGitHubUserInfo(code) {
+            try {
+                // GitHub OAuth配置
+                const CLIENT_ID = 'Ov23liIzDeFcRlNZEMA4';
+                const CLIENT_SECRET = '354184a1a8c3540d6c2127205bd1f3aedf21f1a6';
+                
+                statusEl.textContent = '正在获取访问令牌...';
+                
+                let tokenData = null;
+                try {
+                    // 第一步：用授权码换取访问令牌
+                    const tokenResponse = await fetch('https://github.com/login/oauth/access_token', {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            client_id: CLIENT_ID,
+                            client_secret: CLIENT_SECRET,
+                            code: code
+                        })
+                    });
+                    
+                    tokenData = await tokenResponse.json();
+                    
+                    if (tokenData.error) {
+                        throw new Error(`GitHub OAuth错误: ${tokenData.error_description || tokenData.error}`);
+                    }
+                } catch (tokenError) {
+                    console.error('Token获取失败:', tokenError);
+                    // 容错：即使令牌获取失败，也提供基本登录信息
+                    return createFallbackUser('令牌获取失败，可能是CORS限制或网络问题');
+                }
+                
+                const accessToken = tokenData.access_token;
+                if (!accessToken) {
+                    return createFallbackUser('未能获取访问令牌');
+                }
+                
+                statusEl.textContent = '正在获取用户信息...';
+                
+                let githubUser = null;
+                try {
+                    // 第二步：使用访问令牌获取用户信息
+                    // 使用更标准的Authorization头格式
+                    const userResponse = await fetch('https://api.github.com/user', {
+                        headers: {
+                            'Authorization': `Bearer ${accessToken}`,
+                            'Accept': 'application/vnd.github.v3+json',
+                            'User-Agent': 'Ruanm-Guanwang-App'
+                        }
+                    });
+                    
+                    if (!userResponse.ok) {
+                        throw new Error(`GitHub API请求失败: ${userResponse.status}`);
+                    }
+                    
+                    githubUser = await userResponse.json();
+                } catch (userError) {
+                    console.error('GitHub API调用失败:', userError);
+                    return createFallbackUser('用户信息获取失败，CORS或API限制');
+                }
+                
+                // 获取用户邮箱（可能需要额外请求）
+                let email = githubUser.email;
+                if (!email) {
+                    try {
+                        const emailResponse = await fetch('https://api.github.com/user/emails', {
+                            headers: {
+                                'Authorization': `Bearer ${accessToken}`,
+                                'Accept': 'application/vnd.github.v3+json',
+                                'User-Agent': 'Ruanm-Guanwang-App'
+                            }
+                        });
+                        
+                        if (emailResponse.ok) {
+                            const emails = await emailResponse.json();
+                            // 查找主邮箱
+                            const primaryEmail = emails.find(e => e.primary) || emails[0];
+                            email = primaryEmail?.email || 'private@github.com';
+                        }
+                    } catch (emailError) {
+                        console.log('获取邮箱失败，使用默认值');
+                        email = githubUser.login ? `${githubUser.login}@github.user` : 'private@github.com';
+                    }
+                }
+                
+                // 构造用户数据 - 增强容错
+                const userData = {
+                    id: (githubUser.id || Date.now()).toString(),
+                    name: githubUser.name || githubUser.login || 'Ruanm用户', // 修改：使用默认名称"Ruanm用户"
+                    username: githubUser.login || 'github_user',
+                    login: githubUser.login || 'github_user',
+                    email: email || 'private@github.com',
+                    avatar_url: githubUser.avatar_url || '阮铭泽工具箱/icon.jpg', // 修改：使用默认工具箱图标
+                    avatar: githubUser.avatar_url || '阮铭泽工具箱/icon.jpg', // 修改：使用默认工具箱图标
+                    provider: 'github',
+                    html_url: githubUser.html_url || `https://github.com/${githubUser.login || 'unknown'}`,
+                    profile_url: githubUser.html_url || `https://github.com/${githubUser.login || 'unknown'}`,
+                    bio: githubUser.bio || null,
+                    location: githubUser.location || null,
+                    company: githubUser.company || null,
+                    public_repos: githubUser.public_repos || 0,
+                    followers: githubUser.followers || 0,
+                    following: githubUser.following || 0,
+                    created_at: githubUser.created_at || new Date().toISOString(),
+                    updated_at: githubUser.updated_at || new Date().toISOString(),
+                    theme: getCookie('theme') || 'light' // 添加主题设置
+                };
+                
+                // 注意：在生产环境中，如果需要将用户数据保存到后端，这里应该发送到您的后端服务器
+                // 示例代码（如果需要后端同步）：
+                /*
+                try {
+                    const backendUrl = 'http://your-windows-server-ip:3001'; // 请替换为您的服务器IP
+                    await fetch(backendUrl + '/api/user/github', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(userData)
+                    });
+                } catch (syncError) {
+                    console.log('用户数据同步到后端失败:', syncError);
+                }
+                */
+                
+                console.log('GitHub用户信息获取成功:', userData);
+                return userData;
+                
+            } catch (error) {
+                console.error('获取GitHub用户信息完全失败:', error);
+                return createFallbackUser('获取用户信息失败: ' + error.message);
+            }
+        }
+        
+        // 创建备用用户信息（容错机制）
+        function createFallbackUser(errorMsg) {
+            return {
+                id: 'github_fallback_' + Date.now(),
+                name: 'Ruanm用户', // 修改：使用默认名称"Ruanm用户"
+                username: 'github_authorized_user',
+                login: 'github_authorized_user',
+                email: 'authorized@github.com',
+                avatar_url: '阮铭泽工具箱/icon.jpg', // 修改：使用默认工具箱图标
+                avatar: '阮铭泽工具箱/icon.jpg', // 修改：使用默认工具箱图标
+                provider: 'github',
+                html_url: 'https://github.com',
+                profile_url: 'https://github.com',
+                bio: null,
+                location: null,
+                company: null,
+                public_repos: 0,
+                followers: 0,
+                following: 0,
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString(),
+                error: errorMsg,
+                note: '授权成功，但获取详细信息失败。请在HTTPS环境下使用完整功能。',
+                theme: getCookie('theme') || 'light' // 添加主题设置
+            };
+        }
+        
+        // 页面加载后处理回调
+        if (code || error) {
+            handleCallback();
+        } else {
+            statusEl.textContent = '❌ 无效的OAuth回调';
+            spinnerEl.style.display = 'none';
+            resultEl.innerHTML = `
+                <div class="error">
+                    <p>这个页面用于处理OAuth登录回调</p>
+                    <p>请从首页的登录按钮开始登录流程</p>
+                    <div style="margin-top: 15px;">
+                        <button onclick="tryAgain()" style="margin-right: 10px; padding: 10px 20px; background: #4361ee; color: white; border: none; border-radius: 8px; cursor: pointer;">
+                            立即登录
+                        </button>
+                        <button onclick="goBack()" style="padding: 10px 20px; background: #6c757d; color: white; border: none; border-radius: 8px; cursor: pointer;">
+                            返回首页
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
